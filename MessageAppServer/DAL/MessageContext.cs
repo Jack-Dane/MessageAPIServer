@@ -13,5 +13,16 @@ namespace MessageAppServer.DAL
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite(@"Data Source=C:\Users\44785\source\repos\MessageAppServer\MessageAppServer\MessageApp.db")
             .UseLazyLoadingProxies();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>()
+                .HasMany(user => user.RecievedMessages)
+                .WithOne(message => message.Reciever);
+
+            modelBuilder.Entity<User>()
+                .HasMany(user => user.SentMessages)
+                .WithOne(Message => Message.Sender);
+        }
     }
 }

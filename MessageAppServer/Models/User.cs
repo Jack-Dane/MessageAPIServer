@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MessageAppServer.Models
@@ -12,5 +13,10 @@ namespace MessageAppServer.Models
 
         public string Username { get; set; }
         public string Name { get; set; }
+
+        [JsonIgnore]
+        public virtual List<Message> RecievedMessages { get; set; } = new List<Message>();
+        [JsonIgnore]
+        public virtual List<Message> SentMessages { get; set; } = new List<Message>();
     }
 }
