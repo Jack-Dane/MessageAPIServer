@@ -100,6 +100,21 @@ namespace MessageAppServer.Controllers
             return NoContent();
         }
 
+        [HttpGet("{id}/sent-messages/")]
+        public async Task<ActionResult<IEnumerable<Message>>> GetSentMessages(int id){
+            IEnumerable<Message> messages = await _context.Messages.Where(message => message.SenderId == id).ToListAsync();
+
+            return messages.ToArray();
+        }
+
+        [HttpGet("{id}/recieved-messages/")]
+        public async Task<ActionResult<IEnumerable<Message>>> GetRecievedMessages(int id)
+        {
+            IEnumerable<Message> messages = await _context.Messages.Where(message => message.RecieverId == id).ToListAsync();
+
+            return messages.ToArray();
+        }
+
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.UserId == id);
