@@ -115,6 +115,20 @@ namespace MessageAppServer.Controllers
             return messages.ToArray();
         }
 
+        // login
+        [HttpPost("login/")]
+        public async Task<ActionResult<string>> Authenticate(string username, string password)
+        {
+            // search for a user with the username and password
+            User user = await _context.Users.FirstOrDefaultAsync(user => user.Username == username);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return "test";
+        }
+
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.UserId == id);

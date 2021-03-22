@@ -13,6 +13,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using MessageAppServer.DAL;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Owin;
+using Owin;
+using MessageAppServer.Hubs;
 
 namespace MessageAppServer
 {
@@ -29,6 +32,15 @@ namespace MessageAppServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSignalR();
+            services.AddCors(options => options.AddPolicy("CorsPolicy",
+            builder =>
+            {
+                builder.AllowAnyHeader()
+                       .AllowAnyMethod()
+                       .SetIsOriginAllowed((host) => true)
+                       .AllowCredentials();
+            }));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MessageAppServer", Version = "v1" });
@@ -39,6 +51,8 @@ namespace MessageAppServer
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors("CorsPolicy");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -55,6 +69,7 @@ namespace MessageAppServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<MessageHub>("/messageHub");
             });
         }
     }

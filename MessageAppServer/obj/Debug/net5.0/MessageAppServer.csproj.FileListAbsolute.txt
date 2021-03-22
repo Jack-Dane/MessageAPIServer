@@ -157,3 +157,7 @@ C:\Users\44785\source\repos\MessageAppServer\MessageAppServer\bin\Debug\net5.0\r
 C:\Users\44785\source\repos\MessageAppServer\MessageAppServer\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.InMemory.dll
 C:\Users\44785\source\repos\MessageAppServer\MessageAppServer\bin\Debug\net5.0\Castle.Core.dll
 C:\Users\44785\source\repos\MessageAppServer\MessageAppServer\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Proxies.dll
+C:\Users\44785\source\repos\MessageAppServer\MessageAppServer\bin\Debug\net5.0\Microsoft.AspNet.SignalR.Core.dll
+C:\Users\44785\source\repos\MessageAppServer\MessageAppServer\bin\Debug\net5.0\System.Net.WebSockets.WebSocketProtocol.dll
+C:\Users\44785\source\repos\MessageAppServer\MessageAppServer\bin\Debug\net5.0\Microsoft.Owin.dll
+C:\Users\44785\source\repos\MessageAppServer\MessageAppServer\bin\Debug\net5.0\Owin.dll

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MessageAppServer.DAL;
 using MessageAppServer.Models;
+using MessageAppServer.Hubs;
 
 namespace MessageAppServer.Controllers
 {
@@ -25,6 +26,7 @@ namespace MessageAppServer.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Message>>> GetMessages()
         {
+            // tell clients to update messages
             return await _context.Messages.ToListAsync();
         }
 
@@ -81,6 +83,7 @@ namespace MessageAppServer.Controllers
             _context.Messages.Add(message);
             await _context.SaveChangesAsync();
 
+            // Hub.Clients.All.newMessage(message.Body);
             return CreatedAtAction("GetMessage", new { id = message.MessageId }, message);
         }
 
