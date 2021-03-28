@@ -1,24 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using MessageAppServer.DAL;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Owin;
-using Owin;
 using MessageAppServer.Hubs;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using MessageAppServer.FIlters;
-using Microsoft.AspNetCore.Authentication;
+using MessageAppServer.Filters;
 
 namespace MessageAppServer
 {

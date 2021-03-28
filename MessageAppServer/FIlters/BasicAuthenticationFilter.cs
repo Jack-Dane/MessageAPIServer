@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 using MessageAppServer.DAL;
 using MessageAppServer.Models;
 
-namespace MessageAppServer.FIlters
+namespace MessageAppServer.Filters
 {
     public class BasicAuthenticationFilter
     {
@@ -45,14 +45,12 @@ namespace MessageAppServer.FIlters
                 {
                     // add the user to the context
                     AssignUserToContext(context, userId);
-                    await next(context);
-                    return;
                 }
-                context.Response.StatusCode = 401;
+                await next(context);
             }
             catch (FormatException)
             {
-                context.Response.StatusCode = 401;
+                Debug.WriteLine("Format issues");
             }
         }
 

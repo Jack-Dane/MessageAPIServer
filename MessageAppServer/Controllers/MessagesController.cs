@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MessageAppServer.DAL;
 using MessageAppServer.Models;
-using MessageAppServer.Hubs;
-using MessageAppServer.FIlters;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using MessageAppServer.Filters;
 
 namespace MessageAppServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [BasicAuthorisationFilter]
     public class MessagesController : ControllerBase
     {
         private readonly MessageContext _context;
@@ -27,11 +28,20 @@ namespace MessageAppServer.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Message>>> GetMessages()
         {
-            // tell clients to update messages
-            return await _context.Messages.ToListAsync();
+            // get messages only where the userId is the same on the messages
+            // recipient or sender
+            int? userId = GetUserId();
+            List<Message> messages = await _context.Messages.Where(
+                message =>
+                message.RecieverId == userId
+                ||
+                message.SenderId == userId
+            ).ToListAsync();
+            return messages;
         }
 
         // GET: api/Messages/5
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<Message>> GetMessage(int id)
         {
@@ -107,6 +117,14 @@ namespace MessageAppServer.Controllers
         private bool MessageExists(int id)
         {
             return _context.Messages.Any(e => e.MessageId == id);
+        }
+
+        private int? GetUserId()
+        {
+            int? userId = null;
+            if(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+                userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            return userId;
         }
     }
 }

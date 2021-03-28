@@ -11,7 +11,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Configuration;
-using MessageAppServer.FIlters;
 using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
