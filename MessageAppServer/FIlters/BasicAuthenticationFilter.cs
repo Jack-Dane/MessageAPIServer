@@ -13,6 +13,8 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MessageAppServer.DAL;
+using MessageAppServer.Models;
 
 namespace MessageAppServer.FIlters
 {
@@ -37,10 +39,12 @@ namespace MessageAppServer.FIlters
                 string username = parser.Username;
                 string password = parser.Password;
 
-                // get the username and password from the headers
-                if (username.Equals("username") && password.Equals("password"))
+                // find the usernamd and password in the database
+                int? userId = CheckReturnUserId(username, password);
+                if (userId != null)
                 {
-                    AssignUserToContext(context);
+                    // add the user to the context
+                    AssignUserToContext(context, userId);
                     await next(context);
                     return;
                 }
@@ -52,18 +56,29 @@ namespace MessageAppServer.FIlters
             }
         }
 
-        private void AssignUserToContext(HttpContext context)
+        private void AssignUserToContext(HttpContext context, int? userId)
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, "username", ClaimValueTypes.String, null),
-                new Claim(ClaimTypes.NameIdentifier, "123", ClaimValueTypes.Integer, null)
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString(), ClaimValueTypes.Integer, null)
             };
 
             ClaimsIdentity identity = new ClaimsIdentity(claims, "identity");
             ClaimsPrincipal user = new ClaimsPrincipal(identity);
 
             context.User = user;
+        }
+
+        private int? CheckReturnUserId(string username, string password)
+        {
+            // TODO: implement hashing in database
+            using var db = new MessageContext();
+
+            // get the id where username is the same
+            // TODO: implement the password as a database field
+            User user = db.Users.Where(user => user.Username.Equals(username)).FirstOrDefault();
+            int? userId = user == null ? null : user.UserId; 
+            return userId;
         }
     }
 
