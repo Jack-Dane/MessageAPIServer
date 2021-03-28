@@ -7,6 +7,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MessageAppServer.DAL;
 using MessageAppServer.Models;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Configuration;
+using MessageAppServer.FIlters;
+using Microsoft.AspNetCore.Authorization;
+using System.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
+using System.Security.Claims;
 
 namespace MessageAppServer.Controllers
 {
@@ -15,10 +24,12 @@ namespace MessageAppServer.Controllers
     public class UsersController : ControllerBase
     {
         private readonly MessageContext _context;
+        private readonly IConfiguration _configuration;
 
-        public UsersController(MessageContext context)
+        public UsersController(MessageContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         // GET: api/Users
@@ -115,23 +126,15 @@ namespace MessageAppServer.Controllers
             return messages.ToArray();
         }
 
-        // login
-        [HttpPost("login/")]
-        public async Task<ActionResult<string>> Authenticate(string username, string password)
-        {
-            // search for a user with the username and password
-            User user = await _context.Users.FirstOrDefaultAsync(user => user.Username == username);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return "test";
-        }
-
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.UserId == id);
+        }
+
+        private int GetUserId()
+        {
+            int userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            return userId;
         }
     }
 }

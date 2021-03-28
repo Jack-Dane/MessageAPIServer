@@ -16,6 +16,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Owin;
 using Owin;
 using MessageAppServer.Hubs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using MessageAppServer.FIlters;
+using Microsoft.AspNetCore.Authentication;
 
 namespace MessageAppServer
 {
@@ -48,7 +51,6 @@ namespace MessageAppServer
             services.AddDbContext<MessageContext>(options => options.UseSqlite(@"Data Source=C:\Users\44785\source\repos\MessageAppServer\MessageAppServer\MessageApp.db").UseLazyLoadingProxies());
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseCors("CorsPolicy");
@@ -61,10 +63,9 @@ namespace MessageAppServer
             }
 
             app.UseHttpsRedirection();
-
+            // add the custom basic authentication
+            app.UseBasicAuthentication();
             app.UseRouting();
-
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

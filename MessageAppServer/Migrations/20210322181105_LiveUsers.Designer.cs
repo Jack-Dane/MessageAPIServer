@@ -2,37 +2,20 @@
 using MessageAppServer.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MessageAppServer.Migrations
 {
     [DbContext(typeof(MessageContext))]
-    partial class MessageContextModelSnapshot : ModelSnapshot
+    [Migration("20210322181105_LiveUsers")]
+    partial class LiveUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.4");
-
-            modelBuilder.Entity("MessageAppServer.Models.LiveUser", b =>
-                {
-                    b.Property<int>("LiveUserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("connectionString")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("LiveUserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("LiveUsers");
-                });
 
             modelBuilder.Entity("MessageAppServer.Models.Message", b =>
                 {
@@ -76,17 +59,6 @@ namespace MessageAppServer.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("MessageAppServer.Models.LiveUser", b =>
-                {
-                    b.HasOne("MessageAppServer.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MessageAppServer.Models.Message", b =>

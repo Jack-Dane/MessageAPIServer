@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using MessageAppServer.DAL;
 using MessageAppServer.Models;
 using MessageAppServer.Hubs;
+using MessageAppServer.FIlters;
 
 namespace MessageAppServer.Controllers
 {

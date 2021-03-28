@@ -2,14 +2,16 @@
 using MessageAppServer.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MessageAppServer.Migrations
 {
     [DbContext(typeof(MessageContext))]
-    partial class MessageContextModelSnapshot : ModelSnapshot
+    [Migration("20210322181228_LiveUsersV2")]
+    partial class LiveUsersV2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

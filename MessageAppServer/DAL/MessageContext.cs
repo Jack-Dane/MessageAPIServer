@@ -7,8 +7,11 @@ namespace MessageAppServer.DAL
     {
         public DbSet<Message> Messages { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<LiveUser> LiveUsers { get; set; }
 
         public MessageContext(DbContextOptions<MessageContext> options) : base(options) { }
+
+        public MessageContext() { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite(@"Data Source=C:\Users\44785\source\repos\MessageAppServer\MessageAppServer\MessageApp.db")
