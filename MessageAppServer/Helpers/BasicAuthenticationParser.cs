@@ -11,18 +11,18 @@ namespace MessageAppServer.Helpers
 {
     public class BasicAuthenticationParser
     {
-        private HttpContext _context;
+        private string _authHeader;
 
         public BasicAuthenticationParser(HttpContext context)
         {
-            _context = context;
+            _authHeader = context.Request.Headers["Authorization"];
         }
 
-        public void ParseHeader(string authHeader)
+        public void ParseHeader()
         {
-            if (authHeader != null)
+            if (_authHeader != null)
             {
-                var authHeaderValue = AuthenticationHeaderValue.Parse(authHeader);
+                var authHeaderValue = AuthenticationHeaderValue.Parse(_authHeader);
                 if (authHeaderValue.Scheme.Equals(AuthenticationSchemes.Basic.ToString(), StringComparison.OrdinalIgnoreCase))
                 {
                     var credentials = Encoding.UTF8

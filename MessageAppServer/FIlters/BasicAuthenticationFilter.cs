@@ -31,11 +31,10 @@ namespace MessageAppServer.Filters
         {
             try
             {
-                string authHeader = context.Request.Headers["Authorization"];
                 BasicAuthenticationParser parser = new BasicAuthenticationParser(context);
 
                 // put in the authHeader and get the username and password from the parser
-                parser.ParseHeader(authHeader);
+                parser.ParseHeader();
                 string username = parser.Username;
                 string password = parser.Password;
 
@@ -69,14 +68,21 @@ namespace MessageAppServer.Filters
 
         private int? CheckReturnUserId(string username, string password)
         {
-            // TODO: implement hashing in database
             using var db = new MessageContext();
 
             // get the id where username is the same
-            // TODO: implement the password as a database field
             User user = db.Users.Where(user => user.Username.Equals(username)).FirstOrDefault();
-            int? userId = user == null ? null : user.UserId; 
-            return userId;
+            if(CheckPassword(user, password))
+                return user.UserId;
+            return null;
+        }
+
+        private bool CheckPassword(User user, string password)
+        {
+            // check the hashed password with the one supplied in database with salt
+            if (user is not null)
+                return PasswordHasher.CheckPassword(password, user.Salt, user.Password);
+            return false;
         }
     }
 

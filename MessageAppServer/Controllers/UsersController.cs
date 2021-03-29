@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using System.Security.Claims;
+using MessageAppServer.Helpers;
 
 namespace MessageAppServer.Controllers
 {
@@ -86,8 +87,21 @@ namespace MessageAppServer.Controllers
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<User>> PostUser(string username, string password, string name)
         {
+            // generate a password based on what has been entered
+            string salt = PasswordHasher.GenerateSalt(32);
+            string hashedPassword = PasswordHasher.HashPassword(password, salt);
+
+            // check this is correct way to implement - maybe do another model (UserCreateModel)...
+            User user = new User()
+            {
+                Name = name,
+                Username = username,
+                Password = hashedPassword,
+                Salt = salt,
+            };
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
@@ -128,12 +142,6 @@ namespace MessageAppServer.Controllers
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.UserId == id);
-        }
-
-        private int GetUserId()
-        {
-            int userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            return userId;
         }
     }
 }
