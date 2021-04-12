@@ -14,7 +14,7 @@ namespace MessageAppServer.DAL
         public MessageContext() { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite(@"Data Source=C:\Users\44785\source\repos\MessageAppServer\MessageAppServer\MessageApp.db")
+            => options.UseSqlite(@"Data Source=C:\Users\jackd\source\repos\MessageAPIServer\MessageAppServer\MessageApp.db")
             .UseLazyLoadingProxies();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

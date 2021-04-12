@@ -1,20 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\44785\\source\\repos\\MessageAppServer\\MessageAppServer\\MessageAppServer.csproj": {}
+    "C:\\Users\\jackd\\source\\repos\\MessageAPIServer\\MessageAppServer\\MessageAppServer.csproj": {}
   },
   "projects": {
-    "C:\\Users\\44785\\source\\repos\\MessageAppServer\\MessageAppServer\\MessageAppServer.csproj": {
+    "C:\\Users\\jackd\\source\\repos\\MessageAPIServer\\MessageAppServer\\MessageAppServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\44785\\source\\repos\\MessageAppServer\\MessageAppServer\\MessageAppServer.csproj",
+        "projectUniqueName": "C:\\Users\\jackd\\source\\repos\\MessageAPIServer\\MessageAppServer\\MessageAppServer.csproj",
         "projectName": "MessageAppServer",
-        "projectPath": "C:\\Users\\44785\\source\\repos\\MessageAppServer\\MessageAppServer\\MessageAppServer.csproj",
-        "packagesPath": "C:\\Users\\44785\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\44785\\source\\repos\\MessageAppServer\\MessageAppServer\\obj\\",
+        "projectPath": "C:\\Users\\jackd\\source\\repos\\MessageAPIServer\\MessageAppServer\\MessageAppServer.csproj",
+        "packagesPath": "C:\\Users\\jackd\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jackd\\source\\repos\\MessageAPIServer\\MessageAppServer\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\44785\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\jackd\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -129,7 +132,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -15,7 +15,7 @@ namespace MessageAppServer.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [BasicAuthorisationFilter]
-    public class MessagesController : ControllerBase
+    public class MessagesController : ControllerBaseAuthMethods
     {
         private readonly MessageContext _context;
 
@@ -117,14 +117,6 @@ namespace MessageAppServer.Controllers
         private bool MessageExists(int id)
         {
             return _context.Messages.Any(e => e.MessageId == id);
-        }
-
-        private int? GetUserId()
-        {
-            int? userId = null;
-            if(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
-                userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            return userId;
         }
     }
 }

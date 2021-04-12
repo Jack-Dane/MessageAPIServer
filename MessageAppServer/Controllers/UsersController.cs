@@ -21,15 +21,13 @@ namespace MessageAppServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : ControllerBaseAuthMethods
     {
         private readonly MessageContext _context;
-        private readonly IConfiguration _configuration;
 
-        public UsersController(MessageContext context, IConfiguration configuration)
+        public UsersController(MessageContext context)
         {
             _context = context;
-            _configuration = configuration;
         }
 
         // GET: api/Users
