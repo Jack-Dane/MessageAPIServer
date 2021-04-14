@@ -13,6 +13,7 @@ namespace MessageAppServer.Filters
     public class BasicAuthorisationFilter : Attribute, IAuthorizationFilter
     {
         public string Role { get; set; }
+
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             switch (Role)

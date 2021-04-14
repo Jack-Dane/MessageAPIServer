@@ -41,7 +41,6 @@ namespace MessageAppServer.Controllers
         }
 
         // GET: api/Messages/5
-        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<Message>> GetMessage(int id)
         {

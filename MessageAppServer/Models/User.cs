@@ -12,7 +12,9 @@ namespace MessageAppServer.Models
         public int UserId { get; set; }
 
         public string Username { get; set; }
+        [JsonIgnore]
         public string Password { get; set; }
+        [JsonIgnore]
         public string Salt { get; set; }
         public string Name { get; set; }
 

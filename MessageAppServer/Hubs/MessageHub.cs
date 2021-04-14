@@ -5,34 +5,73 @@ using System.Linq;
 using System.Threading.Tasks;
 using MessageAppServer.Models;
 using MessageAppServer.DAL;
+using MessageAppServer.Filters;
 
 namespace MessageAppServer.Hubs
 {
+    [BasicAuthorisationFilter]
     public class MessageHub : Hub
     {
-        public async Task SendMessageToUser(int senderId, int recieverId, string message)
+        private readonly MessageContext _context;
+        private readonly static ConnectionMapping<string> _connections = new ConnectionMapping<string>();
+
+        public MessageHub(MessageContext context)
         {
-            // TODO - check the user is logged in
-            using var db = new MessageContext();
-
-            // find the clients connectionId in the LiveUsers table
-            LiveUser reciever = db.LiveUsers.Where(liveUser => liveUser.UserId == recieverId).FirstOrDefault();
-            string recieverConnectionId = reciever.connectionString;
-
-            // find the sender based on the senderId
-            User sender = db.Users.Where(user => user.UserId == senderId).FirstOrDefault();
-            string senderName = sender.Name;
-
-            // TODO - create the new message in the database so can be picked up by API
-
-            // send the notification to the client
-            await Clients.Client(recieverConnectionId).SendAsync("RecieveMessage", message, senderName);
+            _context = context;
         }
 
-        public async Task JoinGroup(string groupName)
+        public override Task OnConnectedAsync()
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-            await Clients.All.SendAsync("ReceiveMessage", "Bot", "User has joined group " + groupName);
+            // TODO string name = Context.User.Identity.Name;
+            string name = "test";
+
+            _connections.Add(name, Context.ConnectionId);
+
+            return base.OnConnectedAsync();
+        }
+
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            // TODO string name = Context.User.Identity.Name;
+            string name = "test";
+
+            _connections.Remove(name, Context.ConnectionId);
+
+            return base.OnDisconnectedAsync(exception);
+        }
+        public async Task SendMessageToUser(string senderUsername, string recieverUsername, string message)
+        {
+            IEnumerable<string> connectionIds = FindConnectionIdBasedOnUsername(recieverUsername);
+            foreach (string connectionId in connectionIds)
+            {
+                await Clients.Client(connectionId).SendAsync("RecieveMessage", message, senderUsername);
+            }
+
+            AddMessageToDatabase(senderUsername, recieverUsername, message);
+        }
+
+        private IEnumerable<string> FindConnectionIdBasedOnUsername(string username)
+        {
+            IEnumerable<string> connectionIds = _connections.GetConnections(username);
+            return connectionIds;
+        }
+
+        private async void AddMessageToDatabase(string senderUsername, string recieverUsername, string message)
+        {
+            User sender = FindAndReturnUserByUsername(senderUsername);
+            User reciever = FindAndReturnUserByUsername(recieverUsername);
+            await _context.Messages.AddAsync(new Message()
+            {
+                Sender = sender,
+                Reciever = reciever,
+                Body = message
+            });
+            await _context.SaveChangesAsync();
+        }
+
+        private User FindAndReturnUserByUsername(string username)
+        {
+            return _context.Users.Where(user => user.Username == username).First();
         }
     }
 }

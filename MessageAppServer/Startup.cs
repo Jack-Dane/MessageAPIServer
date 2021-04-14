@@ -52,6 +52,7 @@ namespace MessageAppServer
             }
 
             app.UseHttpsRedirection();
+            // add the custom basic authentication filter
             app.UseBasicAuthentication();
             app.UseRouting();
 
