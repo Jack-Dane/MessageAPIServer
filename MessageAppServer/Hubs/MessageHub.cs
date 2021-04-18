@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using MessageAppServer.Models;
 using MessageAppServer.DAL;
 using MessageAppServer.Filters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MessageAppServer.Hubs
 {
-    [BasicAuthorisationFilter]
+    [Authorize("MyAuthorizationPolicy")]
     public class MessageHub : Hub
     {
         private readonly MessageContext _context;
@@ -60,18 +61,21 @@ namespace MessageAppServer.Hubs
         {
             User sender = FindAndReturnUserByUsername(senderUsername);
             User reciever = FindAndReturnUserByUsername(recieverUsername);
-            await _context.Messages.AddAsync(new Message()
+            if (sender is not null && reciever is not null)
             {
-                Sender = sender,
-                Reciever = reciever,
-                Body = message
-            });
-            await _context.SaveChangesAsync();
+                await _context.Messages.AddAsync(new Message()
+                {
+                    Sender = sender,
+                    Reciever = reciever,
+                    Body = message
+                });
+                await _context.SaveChangesAsync();
+            }
         }
 
         private User FindAndReturnUserByUsername(string username)
         {
-            return _context.Users.Where(user => user.Username == username).First();
+            return _context.Users.Where(user => user.Username == username).FirstOrDefault();
         }
     }
 }

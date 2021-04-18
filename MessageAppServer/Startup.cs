@@ -8,6 +8,7 @@ using MessageAppServer.DAL;
 using Microsoft.EntityFrameworkCore;
 using MessageAppServer.Hubs;
 using MessageAppServer.Filters;
+using Microsoft.AspNetCore.SignalR;
 
 namespace MessageAppServer
 {

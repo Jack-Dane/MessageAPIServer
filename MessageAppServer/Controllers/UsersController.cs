@@ -1,20 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MessageAppServer.DAL;
 using MessageAppServer.Models;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Authorization;
-using System.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
-using System.Security.Claims;
 using MessageAppServer.Helpers;
 
 namespace MessageAppServer.Controllers
@@ -87,11 +77,9 @@ namespace MessageAppServer.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(string username, string password, string name)
         {
-            // generate a password based on what has been entered
             string salt = PasswordHasher.GenerateSalt(32);
             string hashedPassword = PasswordHasher.HashPassword(password, salt);
 
-            // check this is correct way to implement - maybe do another model (UserCreateModel)...
             User user = new User()
             {
                 Name = name,

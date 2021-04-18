@@ -7,7 +7,6 @@ namespace MessageAppServer.DAL
     {
         public DbSet<Message> Messages { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<LiveUser> LiveUsers { get; set; }
 
         public MessageContext(DbContextOptions<MessageContext> options) : base(options) { }
 
