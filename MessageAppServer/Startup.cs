@@ -39,6 +39,14 @@ namespace MessageAppServer
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MessageAppServer", Version = "v1" });
             });
             services.AddDbContext<MessageContext>(options => options.UseSqlite(@"Data Source=C:\Users\44785\source\repos\MessageAppServer\MessageAppServer\MessageApp.db").UseLazyLoadingProxies());
+            services
+            .AddAuthorization(options =>
+            {
+                options.AddPolicy("DomainRestricted", policy =>
+                {
+                    policy.Requirements.Add(new DomainRestrictedRequirement());
+                });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
