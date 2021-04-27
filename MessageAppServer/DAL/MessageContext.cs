@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MessageAppServer.Models;
+using System.Threading.Tasks;
 
 namespace MessageAppServer.DAL
 {
-    public class MessageContext : DbContext
+    public class MessageContext : DbContext, IMessageContext
     {
         public DbSet<Message> Messages { get; set; }
         public DbSet<User> Users { get; set; }
@@ -25,6 +26,21 @@ namespace MessageAppServer.DAL
             modelBuilder.Entity<User>()
                 .HasMany(user => user.SentMessages)
                 .WithOne(Message => Message.Sender);
+        }
+
+        public void MarkAsModified(Message item)
+        {
+            Entry(item).State = EntityState.Modified;
+        }
+
+        public void MarkAsModified(User item)
+        {
+            Entry(item).State = EntityState.Modified;
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await base.SaveChangesAsync();
         }
     }
 }

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MessageAppServer.Migrations
 {
-    [DbContext(typeof(MessageContext))]
+    [DbContext(typeof(IMessageContext))]
     [Migration("20210329214535_HashedPasswords")]
     partial class HashedPasswords
     {

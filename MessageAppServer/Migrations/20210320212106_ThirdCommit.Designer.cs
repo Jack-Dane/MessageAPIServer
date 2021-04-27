@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MessageAppServer.Migrations
 {
-    [DbContext(typeof(MessageContext))]
+    [DbContext(typeof(IMessageContext))]
     [Migration("20210320212106_ThirdCommit")]
     partial class ThirdCommit
     {

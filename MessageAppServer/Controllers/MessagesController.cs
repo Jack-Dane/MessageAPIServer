@@ -17,9 +17,9 @@ namespace MessageAppServer.Controllers
     [BasicAuthorisationFilter]
     public class MessagesController : ControllerBaseAuthMethods
     {
-        private readonly MessageContext _context;
+        private readonly IMessageContext _context = new MessageContext();
 
-        public MessagesController(MessageContext context)
+        public MessagesController(IMessageContext context)
         {
             _context = context;
         }
@@ -64,7 +64,7 @@ namespace MessageAppServer.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(message).State = EntityState.Modified;
+            _context.MarkAsModified(message);
 
             try
             {

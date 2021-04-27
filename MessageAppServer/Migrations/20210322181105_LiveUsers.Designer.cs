@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MessageAppServer.Migrations
 {
-    [DbContext(typeof(MessageContext))]
+    [DbContext(typeof(IMessageContext))]
     [Migration("20210322181105_LiveUsers")]
     partial class LiveUsers
     {

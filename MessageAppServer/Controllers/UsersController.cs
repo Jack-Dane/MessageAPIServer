@@ -6,16 +6,18 @@ using Microsoft.EntityFrameworkCore;
 using MessageAppServer.DAL;
 using MessageAppServer.Models;
 using MessageAppServer.Helpers;
+using MessageAppServer.Filters;
 
 namespace MessageAppServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    // [BasicAuthorisationFilter]
     public class UsersController : ControllerBaseAuthMethods
     {
-        private readonly MessageContext _context;
+        private readonly IMessageContext _context = new MessageContext();
 
-        public UsersController(MessageContext context)
+        public UsersController(IMessageContext context)
         {
             _context = context;
         }
@@ -51,7 +53,7 @@ namespace MessageAppServer.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(user).State = EntityState.Modified;
+            _context.MarkAsModified(user);
 
             try
             {
