@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageAppServer", "MessageAppServer\MessageAppServer.csproj", "{46F8CBDB-03EF-4549-AEF6-14CD386F8BF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageAppServerTests", "MessageAppServerTests\MessageAppServerTests.csproj", "{E5F5E4A4-1C50-4560-815E-6FB2167B2B90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageAppServerTests", "MessageAppServerTests\MessageAppServerTests.csproj", "{E5F5E4A4-1C50-4560-815E-6FB2167B2B90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

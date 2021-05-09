@@ -38,6 +38,7 @@ namespace MessageAppServer
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MessageAppServer", Version = "v1" });
             });
             services.AddScoped<IMessageContext, MessageContext>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddDbContext<MessageContext>(options => options.UseSqlite(@"Data Source=C:\Users\44785\source\repos\MessageAppServer\MessageAppServer\MessageApp.db").UseLazyLoadingProxies());
         }
 

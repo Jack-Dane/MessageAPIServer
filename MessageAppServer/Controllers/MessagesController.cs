@@ -17,26 +17,20 @@ namespace MessageAppServer.Controllers
     [BasicAuthorisationFilter]
     public class MessagesController : ControllerBaseAuthMethods
     {
-        private readonly IMessageContext _context = new MessageContext();
+        private readonly IMessageRepository _messageRepo;
 
-        public MessagesController(IMessageContext context)
+        public MessagesController(IMessageRepository messageRepo)
         {
-            _context = context;
+            _messageRepo = messageRepo;
         }
 
         // GET: api/Messages
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Message>>> GetMessages()
         {
-            // get messages only where the userId is the same on the messages
-            // recipient or sender
             int? userId = GetUserId();
-            List<Message> messages = await _context.Messages.Where(
-                message =>
-                message.RecieverId == userId
-                ||
-                message.SenderId == userId
-            ).ToListAsync();
+            List<Message> messages = await _messageRepo.GetMessageBasedOnUser(userId);
+
             return messages;
         }
 
@@ -44,7 +38,7 @@ namespace MessageAppServer.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Message>> GetMessage(int id)
         {
-            var message = await _context.Messages.FindAsync(id);
+            var message = await _messageRepo.FindMessageAsync(id);
 
             if (message == null)
             {
@@ -64,11 +58,11 @@ namespace MessageAppServer.Controllers
                 return BadRequest();
             }
 
-            _context.MarkAsModified(message);
+            _messageRepo.MarkAsModified(message);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _messageRepo.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -90,8 +84,8 @@ namespace MessageAppServer.Controllers
         [HttpPost]
         public async Task<ActionResult<Message>> PostMessage(Message message)
         {
-            _context.Messages.Add(message);
-            await _context.SaveChangesAsync();
+            _messageRepo.AddMessage(message);
+            await _messageRepo.SaveChangesAsync();
 
             // Hub.Clients.All.newMessage(message.Body);
             return CreatedAtAction("GetMessage", new { id = message.MessageId }, message);
@@ -101,21 +95,21 @@ namespace MessageAppServer.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMessage(int id)
         {
-            var message = await _context.Messages.FindAsync(id);
+            var message = await _messageRepo.FindMessageAsync(id);
             if (message == null)
             {
                 return NotFound();
             }
 
-            _context.Messages.Remove(message);
-            await _context.SaveChangesAsync();
+            _messageRepo.RemoveMessage(message);
+            await _messageRepo.SaveChangesAsync();
 
             return NoContent();
         }
 
         private bool MessageExists(int id)
         {
-            return _context.Messages.Any(e => e.MessageId == id);
+            return _messageRepo.MessageExists(id);
         }
     }
 }
