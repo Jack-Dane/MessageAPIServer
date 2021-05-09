@@ -87,7 +87,6 @@ namespace MessageAppServer.Controllers
             _messageRepo.AddMessage(message);
             await _messageRepo.SaveChangesAsync();
 
-            // Hub.Clients.All.newMessage(message.Body);
             return CreatedAtAction("GetMessage", new { id = message.MessageId }, message);
         }
 

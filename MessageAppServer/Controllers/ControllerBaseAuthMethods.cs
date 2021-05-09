@@ -12,8 +12,15 @@ namespace MessageAppServer.Controllers
         protected int? GetUserId()
         {
             int? userId = null;
-            if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
-                userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            try
+            {
+                if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+                    userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            }
+            catch (NullReferenceException nullReference)
+            {
+                Console.WriteLine(nullReference);
+            }
             return userId;
         }
     }
