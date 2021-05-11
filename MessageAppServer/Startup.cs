@@ -7,7 +7,7 @@ using Microsoft.OpenApi.Models;
 using MessageAppServer.DAL;
 using Microsoft.EntityFrameworkCore;
 using MessageAppServer.Filters;
-using Microsoft.AspNetCore.SignalR;
+using MessageAppServer.Repository;
 
 namespace MessageAppServer
 {
@@ -20,7 +20,6 @@ namespace MessageAppServer
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();

@@ -23,5 +23,10 @@ namespace MessageAppServer.Controllers
             }
             return userId;
         }
+
+        protected void NotAuthorised()
+        {
+            HttpContext.Response.StatusCode = 401;
+        }
     }
 }

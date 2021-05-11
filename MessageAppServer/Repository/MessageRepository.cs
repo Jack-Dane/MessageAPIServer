@@ -4,8 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using MessageAppServer.Models;
 using Microsoft.EntityFrameworkCore;
+using MessageAppServer.DAL;
 
-namespace MessageAppServer.DAL
+namespace MessageAppServer.Repository
 {
     public class MessageRepository : IMessageRepository
     {

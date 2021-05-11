@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MessageAppServer.DAL;
+using MessageAppServer.Repository;
 using MessageAppServer.Models;
 using MessageAppServer.Helpers;
 using MessageAppServer.Filters;
@@ -12,28 +12,26 @@ namespace MessageAppServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    // [BasicAuthorisationFilter]
+    [BasicAuthorisationFilter]
     public class UsersController : ControllerBaseAuthMethods
     {
-        private readonly IMessageContext _context = new MessageContext();
+        private readonly IUserRepository _userRepo; 
 
-        public UsersController(IMessageContext context)
+        public UsersController(IUserRepository userRepo)
         {
-            _context = context;
+            _userRepo = userRepo;
         }
 
-        // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            return await _userRepo.GetUsers();
         }
 
-        // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userRepo.FindUserAsync(id);
 
             if (user == null)
             {
@@ -43,46 +41,49 @@ namespace MessageAppServer.Controllers
             return user;
         }
 
-        // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(int id, User user)
         {
-            if (id != user.UserId)
+            if (ValidateUser(id))
             {
-                return BadRequest();
-            }
-
-            _context.MarkAsModified(user);
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
+                if (id != user.UserId)
                 {
-                    return NotFound();
+                    return BadRequest();
                 }
-                else
-                {
-                    throw;
-                }
-            }
 
-            return NoContent();
+                _userRepo.MarkAsModified(user);
+
+                try
+                {
+                    await _userRepo.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!UserExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return NoContent();
+            }
+            else
+            {
+                return Unauthorized();
+            }
         }
 
-        // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(string username, string password, string name)
         {
             string salt = PasswordHasher.GenerateSalt(32);
             string hashedPassword = PasswordHasher.HashPassword(password, salt);
 
-            User user = new User()
+            User user = new()
             {
                 Name = name,
                 Username = username,
@@ -90,31 +91,37 @@ namespace MessageAppServer.Controllers
                 Salt = salt,
             };
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            _userRepo.AddUser(user);
+            await _userRepo.SaveChangesAsync();
 
             return CreatedAtAction("GetUser", new { id = user.UserId }, user);
         }
 
-        // DELETE: api/Users/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
+            if (ValidateUser(id)) 
             {
-                return NotFound();
+                var user = await _userRepo.FindUserAsync(id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                _userRepo.RemoveUser(user);
+                await _userRepo.SaveChangesAsync();
+
+                return NoContent();
             }
-
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            else
+            {
+                return Unauthorized();
+            }
         }
 
         [HttpGet("{id}/sent-messages/")]
         public async Task<ActionResult<IEnumerable<Message>>> GetSentMessages(int id){
-            IEnumerable<Message> messages = await _context.Messages.Where(message => message.SenderId == id).ToListAsync();
+            IEnumerable<Message> messages = await _userRepo.GetUsersSentMessages(id);
 
             return messages.ToArray();
         }
@@ -122,14 +129,19 @@ namespace MessageAppServer.Controllers
         [HttpGet("{id}/recieved-messages/")]
         public async Task<ActionResult<IEnumerable<Message>>> GetRecievedMessages(int id)
         {
-            IEnumerable<Message> messages = await _context.Messages.Where(message => message.RecieverId == id).ToListAsync();
+            IEnumerable<Message> messages = await _userRepo.GetUsersRecievedMessages(id);
 
             return messages.ToArray();
         }
 
         private bool UserExists(int id)
         {
-            return _context.Users.Any(e => e.UserId == id);
+            return _userRepo.CheckUserExists(id);
+        }
+
+        private bool ValidateUser(int userId)
+        {
+            return GetUserId() is not null && GetUserId() == userId;
         }
     }
 }
