@@ -61,5 +61,10 @@ namespace MessageAppServer.Repository
             return await _context.Messages.Where(message => message.RecieverId == userId)
                 .ToListAsync();
         }
+
+        public async Task<User> GetUserBasedOnEmail(string email)
+        {
+            return await _context.Users.Where(user => user.Username == email).FirstAsync();
+        }
     }
 }
