@@ -29,7 +29,7 @@ namespace MessageAppServer.Controllers
             return messages;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetUser")]
         public async Task<ActionResult<Message>> GetMessage(int id)
         {
             var message = await _messageRepo.FindMessageAsync(id);

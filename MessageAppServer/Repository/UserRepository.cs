@@ -62,9 +62,9 @@ namespace MessageAppServer.Repository
                 .ToListAsync();
         }
 
-        public async Task<User> GetUserBasedOnEmail(string email)
+        public async Task<User> GetUserBasedOnUsername(string username)
         {
-            return await _context.Users.Where(user => user.Username == email).FirstAsync();
+            return await _context.Users.Where(user => user.Username == username).FirstOrDefaultAsync();
         }
     }
 }

@@ -38,7 +38,8 @@ namespace MessageAppServer
             });
             services.AddScoped<IMessageContext, MessageContext>();
             services.AddScoped<IMessageRepository, MessageRepository>();
-            services.AddDbContext<MessageContext>(options => options.UseSqlite(@"Data Source=C:\Users\44785\source\repos\MessageAppServer\MessageAppServer\MessageApp.db").UseLazyLoadingProxies());
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddDbContext<MessageContext>(options => options.UseSqlite(@"Data Source=C:\Users\jackd\source\repos\MessageAPIServer\MessageAppServer\MessageApp.db").UseLazyLoadingProxies());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

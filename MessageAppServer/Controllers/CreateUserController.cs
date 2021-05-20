@@ -31,12 +31,13 @@ namespace MessageAppServer.Controllers
                 Salt = salt,
             };
 
-            if (!UserExistsBasedOnEmail(username))
+            bool userExists = await UserExistsBasedOnEmail(username);
+            if (!userExists)
             {
                 _userRepo.AddUser(user);
                 await _userRepo.SaveChangesAsync();
 
-                return CreatedAtAction("GetUser", new { id = user.UserId }, user);
+                return CreatedAtRoute("GetUser", new { id = user.UserId }, user);
             }
             else
             {
@@ -44,9 +45,9 @@ namespace MessageAppServer.Controllers
             }
         }
 
-        private bool UserExistsBasedOnEmail(string email)
+        private async Task<bool> UserExistsBasedOnEmail(string email)
         {
-            return _userRepo.GetUserBasedOnEmail(email) is null;
+            return await _userRepo.GetUserBasedOnUsername(email) is not null;
         }
     }
 }

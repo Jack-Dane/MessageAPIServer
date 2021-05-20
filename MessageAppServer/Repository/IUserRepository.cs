@@ -15,6 +15,6 @@ namespace MessageAppServer.Repository
         public bool CheckUserExists(int userId);
         public Task<List<Message>> GetUsersSentMessages(int userId);
         public Task<List<Message>> GetUsersRecievedMessages(int userId);
-        public Task<User> GetUserBasedOnEmail(string email);
+        public Task<User> GetUserBasedOnUsername(string username);
     }
 }
