@@ -20,20 +20,20 @@ namespace MessageAppServer.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> CreateUser(string username, string password, string name)
         {
-            string salt = PasswordHasher.GenerateSalt(32);
-            string hashedPassword = PasswordHasher.HashPassword(password, salt);
-
-            User user = new()
-            {
-                Name = name,
-                Username = username,
-                Password = hashedPassword,
-                Salt = salt,
-            };
-
             bool userExists = await UserExistsBasedOnEmail(username);
             if (!userExists)
             {
+                string salt = PasswordHasher.GenerateSalt(32);
+                string hashedPassword = PasswordHasher.HashPassword(password, salt);
+
+                User user = new()
+                {
+                    Name = name,
+                    Username = username,
+                    Password = hashedPassword,
+                    Salt = salt,
+                };
+
                 _userRepo.AddUser(user);
                 await _userRepo.SaveChangesAsync();
 

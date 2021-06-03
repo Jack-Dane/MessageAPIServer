@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MessageAppServer.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using MessageAppServer.Repository;
 
 namespace MessageAppTests.Controllers
 {
