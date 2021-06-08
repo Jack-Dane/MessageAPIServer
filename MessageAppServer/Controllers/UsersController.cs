@@ -28,10 +28,10 @@ namespace MessageAppServer.Controllers
             return await _userRepo.GetUsers();
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        [HttpGet("{username}")]
+        public async Task<ActionResult<User>> GetUser(string username)
         {
-            var user = await _userRepo.FindUserAsync(id);
+            var user = await _userRepo.FindUserAsync(username);
 
             if (user == null)
             {
@@ -41,12 +41,12 @@ namespace MessageAppServer.Controllers
             return user;
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        [HttpPut("{username}")]
+        public async Task<IActionResult> UpdateUser(string username, User user)
         {
-            if (ValidateUser(id))
+            if (await ValidateUserAsync(username))
             {
-                if (id != user.UserId)
+                if (username != user.Username)
                 {
                     return BadRequest();
                 }
@@ -59,7 +59,7 @@ namespace MessageAppServer.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(id))
+                    if (!UserExists(username))
                     {
                         return NotFound();
                     }
@@ -77,12 +77,12 @@ namespace MessageAppServer.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        [HttpDelete("{username}")]
+        public async Task<IActionResult> DeleteUser(string username)
         {
-            if (ValidateUser(id)) 
+            if (await ValidateUserAsync(username))
             {
-                var user = await _userRepo.FindUserAsync(id);
+                var user = await _userRepo.FindUserAsync(username);
                 if (user == null)
                 {
                     return NotFound();
@@ -99,29 +99,35 @@ namespace MessageAppServer.Controllers
             }
         }
 
-        [HttpGet("{id}/sent-messages/")]
-        public async Task<ActionResult<IEnumerable<Message>>> GetSentMessages(int id){
-            IEnumerable<Message> messages = await _userRepo.GetUsersSentMessages(id);
+        [HttpGet("{username}/sent-messages/")]
+        public async Task<ActionResult<IEnumerable<Message>>> GetSentMessages(string username){
+            IEnumerable<Message> messages = await _userRepo.GetUsersSentMessages(username);
 
             return messages.ToArray();
         }
 
-        [HttpGet("{id}/recieved-messages/")]
-        public async Task<ActionResult<IEnumerable<Message>>> GetRecievedMessages(int id)
+        [HttpGet("{username}/received-messages/")]
+        public async Task<ActionResult<IEnumerable<Message>>> GetRecievedMessages(string username)
         {
-            IEnumerable<Message> messages = await _userRepo.GetUsersRecievedMessages(id);
+            IEnumerable<Message> messages = await _userRepo.GetUsersRecievedMessages(username);
 
             return messages.ToArray();
         }
 
-        private bool UserExists(int id)
+        private bool UserExists(string username)
         {
-            return _userRepo.CheckUserExists(id);
+            return _userRepo.CheckUserExists(username);
         }
 
-        private bool ValidateUser(int userId)
+        private async Task<bool> ValidateUserAsync(string username)
         {
-            return GetUserId() is not null && GetUserId() == userId;
+            User user = await GetUserBasedOnUsername(username);
+            return GetUserId() is not null && GetUserId() == user.UserId;
+        }
+
+        private async Task<User> GetUserBasedOnUsername(string username)
+        {
+            return await _userRepo.FindUserAsync(username);
         }
     }
 }

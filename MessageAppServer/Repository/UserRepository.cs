@@ -15,9 +15,10 @@ namespace MessageAppServer.Repository
             _context = context;
         }
 
-        public async Task<User> FindUserAsync(int userId)
+        public async Task<User> FindUserAsync(string username)
         {
-            return await _context.Users.FindAsync(userId);
+            return await _context.Users.Where(user => user.Username == username)
+                .FirstOrDefaultAsync();
         }
 
         public Task<List<User>> GetUsers()
@@ -45,20 +46,22 @@ namespace MessageAppServer.Repository
             _context.Users.Remove(user);
         }
 
-        public bool CheckUserExists(int userId)
+        public bool CheckUserExists(string username)
         {
-            return _context.Users.Any(e => e.UserId == userId);
+            return _context.Users.Any(e => e.Username == username);
         }
 
-        public async Task<List<Message>> GetUsersSentMessages(int userId)
+        public async Task<List<Message>> GetUsersSentMessages(string username)
         {
-            return await _context.Messages.Where(message => message.SenderId == userId)
+            User user = await FindUserAsync(username);
+            return await _context.Messages.Where(message => message.SenderId == user.UserId)
                 .ToListAsync();
         }
 
-        public async Task<List<Message>> GetUsersRecievedMessages(int userId)
+        public async Task<List<Message>> GetUsersRecievedMessages(string username)
         {
-            return await _context.Messages.Where(message => message.RecieverId == userId)
+            User user = await FindUserAsync(username);
+            return await _context.Messages.Where(message => message.RecieverId == user.UserId)
                 .ToListAsync();
         }
 

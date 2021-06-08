@@ -43,7 +43,7 @@ namespace MessageAppServer.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMessage(int id, Message message)
+        public async Task<IActionResult> UpdateMessage(int id, Message message)
         {
             if (id != message.MessageId)
             {

@@ -1,7 +1,6 @@
 using Moq;
 using NUnit.Framework;
 using MessageAppServer.Models;
-using MessageAppServer.DAL;
 using System.Threading.Tasks;
 using MessageAppServer.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -76,7 +75,7 @@ namespace MessageAppTests.Controllers
             Message beforeMessage = GetMessage();
 
             var controller = new MessagesController(_messageRepo.Object);
-            await controller.PutMessage(beforeMessage.MessageId, beforeMessage);
+            await controller.UpdateMessage(beforeMessage.MessageId, beforeMessage);
 
             _messageRepo.Verify(mock => mock.MarkAsModified(beforeMessage), Times.Once());
             _messageRepo.Verify(mock => mock.SaveChangesAsync(), Times.Once());
@@ -89,7 +88,7 @@ namespace MessageAppTests.Controllers
 
             var controller = new MessagesController(_messageRepo.Object);
             // add one to the messageId, so it will always be incorrect
-            var response = await controller.PutMessage(beforeMessage.MessageId + 1, beforeMessage);
+            var response = await controller.UpdateMessage(beforeMessage.MessageId + 1, beforeMessage);
 
             Assert.IsInstanceOf<BadRequestResult>(response);
         }

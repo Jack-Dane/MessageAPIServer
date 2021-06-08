@@ -9,12 +9,12 @@ namespace MessageAppServer.Repository
         public void MarkAsModified(User user);
         public Task<int> SaveChangesAsync();
         public Task<List<User>> GetUsers();
-        public Task<User> FindUserAsync(int userId);
+        public Task<User> FindUserAsync(string username);
         public void AddUser(User user);
         public void RemoveUser(User user);
-        public bool CheckUserExists(int userId);
-        public Task<List<Message>> GetUsersSentMessages(int userId);
-        public Task<List<Message>> GetUsersRecievedMessages(int userId);
+        public bool CheckUserExists(string username);
+        public Task<List<Message>> GetUsersSentMessages(string username);
+        public Task<List<Message>> GetUsersRecievedMessages(string username);
         public Task<User> GetUserBasedOnUsername(string username);
     }
 }
