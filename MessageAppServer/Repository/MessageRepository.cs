@@ -27,14 +27,15 @@ namespace MessageAppServer.Repository
             _context.MarkAsModified(message);
         }
 
-        public async Task<List<Message>> GetMessageBasedOnUser(int? userId)
+        public async Task<List<Message>> GetMessageBasedOnUser(int? userId, int page, int limit)
         {
+            page -= 1;
             List<Message> messages = await _context.Messages.Where(
                 message =>
                 message.RecieverId == userId
                 ||
                 message.SenderId == userId
-            ).ToListAsync();
+            ).Skip(page * limit).Take(limit).ToListAsync();
             return messages;
         }
 

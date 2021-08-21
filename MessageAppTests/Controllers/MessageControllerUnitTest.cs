@@ -23,7 +23,7 @@ namespace MessageAppTests.Controllers
         public async Task GetMessages_ShouldReturnAllMessages()
         {
             List<Message> allMessages = GetMessages();
-            _messageRepo.Setup(repo => repo.GetMessageBasedOnUser(null))
+            _messageRepo.Setup(repo => repo.GetMessageBasedOnUser(null, 1, 50))
                 .Returns(Task.FromResult(allMessages));
 
             var controller = new MessagesController(_messageRepo.Object);

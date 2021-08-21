@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MessageAppServer.Helpers
@@ -17,7 +18,7 @@ namespace MessageAppServer.Helpers
 
             // append the salt to the end of the password
             string passwordSalt = $"{password}{salt}";
-            byte[] passwordSaltBytes = Convert.FromBase64String(passwordSalt);
+            byte[] passwordSaltBytes = Encoding.UTF8.GetBytes(passwordSalt);
             string hashedPassword;
 
             // using the SHA256 class compute the hash using the salt

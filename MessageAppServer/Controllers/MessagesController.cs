@@ -14,6 +14,7 @@ namespace MessageAppServer.Controllers
     public class MessagesController : ControllerBaseAuthMethods
     {
         private readonly IMessageRepository _messageRepo;
+        private int _pageLimit = 50;
 
         public MessagesController(IMessageRepository messageRepo)
         {
@@ -21,10 +22,10 @@ namespace MessageAppServer.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Message>>> GetMessages()
+        public async Task<ActionResult<IEnumerable<Message>>> GetMessages(int page=1)
         {
             int? userId = GetUserId();
-            List<Message> messages = await _messageRepo.GetMessageBasedOnUser(userId);
+            List<Message> messages = await _messageRepo.GetMessageBasedOnUser(userId, page, _pageLimit);
 
             return messages;
         }

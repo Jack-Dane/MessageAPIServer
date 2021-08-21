@@ -11,7 +11,7 @@ namespace MessageAppServer.Repository
         // TODO - will be standard in all repos - extract?
         public void MarkAsModified(Message message);
         public Task<int> SaveChangesAsync();
-        public Task<List<Message>> GetMessageBasedOnUser(int? userId);
+        public Task<List<Message>> GetMessageBasedOnUser(int? userId, int page, int limit);
         public Task<Message> FindMessageAsync(int messageId);
         public void AddMessage(Message message);
         public void RemoveMessage(Message message);

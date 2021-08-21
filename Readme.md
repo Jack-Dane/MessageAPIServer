@@ -75,7 +75,7 @@ Endpoint: /api/Messages/<id>
 
 ### User Creation
 Method: POST
-Endpoint: /api/CreateUser
+Endpoint: /api/CreateUser/
 Parameters:
 * username
 * password
